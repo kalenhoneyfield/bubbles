@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  body {
+    /* justify-content: space-evenly; */
+    flex-direction: column;
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgb(189, 241, 241), 50%, rgb(2, 18, 250));
+  }
+  
