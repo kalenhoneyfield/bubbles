@@ -18,15 +18,15 @@ class Bubble {
         this.bubble.style.width = `${this._size}px`
         this.bubble.style.filter = `blur(${this._blur}px)`
         this.bubble.style.transition = '4s ease'
-        // this.bubble.style.background = this._color //need to find a method to adjust the color based on the background or user choice
-        this.bubble.style.background = 'radial-gradient(ellipse at center,  rgba(255,255,255,0.5) 0%,rgba(255,255,255,0) 70%);'
-        this.bubble.style.boxShadow = '0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px rgba(255, 255, 255, 1)'
+        this.bubble.style.background = 'radial-gradient(circle at center,  rgba(255,255,255,0.5) 0%,rgba(255,255,255,0) 70%);'
+        this.bubble.style.boxShadow = `0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px ${this._color}`
         this.bubble.style.opacity = 0
         this.bubble.style.zIndex = -1
         this.bubble.style.transform = `translate(calc(${this.startPOS}vw - 50px), calc(100vh - 10px))`
         this.bubble.id = this.ID
 
         const el = document.querySelector(this._elem)
+        el.style.overflow = 'hidden'
         el.append(this.bubble)
     }
 
@@ -67,6 +67,15 @@ class Bubble {
         this.startPOS = Math.floor(Math.random() * 100)
     }
 
+    getRandomColor(){
+        const epoc = '1/1/1970'
+        let color = new Date(new Date(epoc).getTime() + Math.random() * (new Date().getTime() - new Date(epoc).getTime()))
+        color = Math.abs( Math.floor(color.getTime() / 1000) ) //get the number of seconds its been since the Epoch
+        let bgColor = color.toString(16) //lets play with converting a number to a string, what could possible go wrong ¯\_(ツ)_/¯
+        bgColor = "#" + (bgColor).slice(-6) 
+        this._color = bgColor
+    }
+
 }
 
 
@@ -79,7 +88,11 @@ function makeBubbles(){
         bubbly.push(bub)
     }
 
-    bubbly.forEach(blubble => {
+    bubbly.forEach((blubble, idx) => {
+        
+        if(idx%2 === 0){
+            blubble.getRandomColor()
+        }
         blubble.createBubble()
         blubble.moveBubble()
     })
