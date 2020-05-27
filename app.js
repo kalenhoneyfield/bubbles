@@ -4,8 +4,11 @@ class Bubble {
         this._size = size
         this._blur = blur
         this._color = color
-        this._elem = elem
+        this._elem = document.querySelector(elem)
         this.range = 0
+        this.height = null
+        this.width = null
+        this.bubble = null
     }
 
     createBubble() {
@@ -22,12 +25,11 @@ class Bubble {
         this.bubble.style.boxShadow = `0 20px 30px rgba(0, 0, 0, 0.2), inset 0px 10px 30px 5px ${this._color}`
         this.bubble.style.opacity = 0
         this.bubble.style.zIndex = -1
-        this.bubble.style.transform = `translate(calc(${this.startPOS}vw - 50px), calc(100vh - 10px))`
+        this.bubble.style.transform = `translate(${this.startPOS}px, ${this.height}px)`
         this.bubble.id = this.ID
 
-        const el = document.querySelector(this._elem)
-        el.style.overflow = 'hidden'
-        el.append(this.bubble)
+        this._elem.style.overflow = 'hidden'
+        this._elem.append(this.bubble)
     }
 
     moveBubble() {
@@ -38,16 +40,14 @@ class Bubble {
                 this.range = 0
                 this.bubble.style.transition = '0s'
                 this.bubble.style.opacity = 0;
-                // this.bubble.style.top = this.range +'px'
-                this.randomStart()
-                this.bubble.style.transform = `translate(calc(${this.startPOS}vw - 30px), calc(100vh - 20px))`
+                  this.randomStart()
+                this.bubble.style.transform = `translate(${this.startPOS}px, ${this.height}px)`
             }
             else{
                 this.bubble.style.transition = '4s ease-in-out'
                 this.bubble.style.opacity = 1;
                 this.range = this.range - distance
-                // this.bubble.style.top = this.range +'px'
-                this.bubble.style.transform = `translate(calc(${this.startPOS}vw - 30px), calc(100vh + ${this.range}px))`
+                this.bubble.style.transform = `translate(${this.startPOS}px, ${this.height + this.range}px)`
             }
         }, (Math.floor(Math.random() * (4000 - 1000 + 1) ) + 1000) + 1);
 
@@ -64,7 +64,8 @@ class Bubble {
     }
 
     randomStart() {
-        this.startPOS = Math.floor(Math.random() * 100)
+        this.getDimensions()
+        this.startPOS = Math.floor(Math.random() * this.width)
     }
 
     getRandomColor(){
@@ -74,6 +75,12 @@ class Bubble {
         let bgColor = color.toString(16) //lets play with converting a number to a string, what could possible go wrong ¯\_(ツ)_/¯
         bgColor = "#" + (bgColor).slice(-6) 
         this._color = bgColor
+    }
+
+    getDimensions(){
+        const dims = this._elem.getBoundingClientRect()
+        this.height = dims.height
+        this.width = dims.width
     }
 
 }
@@ -90,9 +97,10 @@ function makeBubbles(){
 
     bubbly.forEach((blubble, idx) => {
         
-        if(idx%2 === 0){
-            blubble.getRandomColor()
-        }
+        // if(idx%2 === 0){
+        //     blubble.getRandomColor()
+        // }
+        blubble.getRandomColor()
         blubble.createBubble()
         blubble.moveBubble()
     })
